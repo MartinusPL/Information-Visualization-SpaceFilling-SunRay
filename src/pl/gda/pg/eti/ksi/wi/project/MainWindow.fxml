@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="721.0" prefWidth="1205.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.gda.pg.eti.ksi.wi.project.MainWindowController">
+    <children>
+      <Canvas fx:id="DrawingSpace" height="632.0" layoutX="14.0" layoutY="14.0" width="1177.0" />
+      <Button layoutX="35.0" layoutY="662.0" mnemonicParsing="false" onAction="#LoadBtnClick" prefHeight="31.0" prefWidth="184.0" text="ZAŁADUJ PLIK" />
+      <Button fx:id="generateBtn" disable="true" layoutX="517.0" layoutY="662.0" mnemonicParsing="false" onAction="#GenerateBtnClick" prefHeight="31.0" prefWidth="184.0" text="GENERUJ WIZUALIZACJĘ" />
+      <Button fx:id="editBtn" disable="true" layoutX="268.0" layoutY="662.0" mnemonicParsing="false" onAction="#EditBtnClick" prefHeight="31.0" prefWidth="184.0" text="EDYTUJ DANE" />
+      <Button layoutX="992.0" layoutY="662.0" mnemonicParsing="false" onAction="#CloseBtnClick" prefHeight="31.0" prefWidth="184.0" text="ZAMKNIJ OKNO" />
+      <Label fx:id="statusLbl" layoutX="35.0" layoutY="706.0" prefHeight="31.0" prefWidth="1145.0" text="" />
+      <Button fx:id="saveBtn" disable="true" layoutX="756.0" layoutY="662.0" mnemonicParsing="false" onAction="#SaveBtnClick" prefHeight="31.0" prefWidth="184.0" text="ZAPISZ DO PLIKU" />
+      <CheckBox fx:id="graphTypeChooser" disable="true" layoutX="535.0" layoutY="698.0" mnemonicParsing="false" onMouseClicked="#GraphTypeCBStateChange" prefHeight="17.0" prefWidth="148.0" text="wyśrodkuj wizualizację" />
+    </children>
+</AnchorPane>
