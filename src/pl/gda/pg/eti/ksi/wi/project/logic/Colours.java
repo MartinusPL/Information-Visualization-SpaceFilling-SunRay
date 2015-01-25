@@ -22,36 +22,12 @@
  * THE SOFTWARE.
  */
 
-package pl.gda.pg.eti.ksi.wi.project;
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+package pl.gda.pg.eti.ksi.wi.project.logic;
 
 /**
  *
- * @author Marcin
+ * @author Marcin Grzesiak <kontakt@mgrzesiak.eu>
  */
-public class spacefilling extends Application {
-    
-    @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
-        
-        Scene scene = new Scene(root);
-        
-        stage.setScene(scene);
-        stage.setTitle("Space Filling - Sun Ray metoda wizualizcji informacji");
-        stage.show();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
+public class Colours {
     
 }

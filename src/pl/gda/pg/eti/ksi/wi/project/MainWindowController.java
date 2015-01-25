@@ -78,7 +78,8 @@ public class MainWindowController implements Initializable {
     @FXML
     private void GenerateBtnClick(ActionEvent event) {
         statusLbl.setText("Trwa generowanie wizualizacji...");
-        srd.Draw();
+        boolean isCentered = (graphTypeChooser.isSelected());
+        srd.Draw(isCentered);
         statusLbl.setText("Wizualizacja wygenerowana!");
         
         saveBtn.setDisable(false);
@@ -187,7 +188,7 @@ public class MainWindowController implements Initializable {
     }
     
     @FXML
-    private void GraphTypeCBStateChange(ActionEvent event){
+    private void GraphTypeCBStateChange(){
         generateBtn.setDisable(false);
     }
     
