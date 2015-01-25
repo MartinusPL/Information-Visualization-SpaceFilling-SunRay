@@ -16,6 +16,6 @@
       <Button layoutX="992.0" layoutY="662.0" mnemonicParsing="false" onAction="#CloseBtnClick" prefHeight="31.0" prefWidth="184.0" text="ZAMKNIJ OKNO" />
       <Label fx:id="statusLbl" layoutX="35.0" layoutY="706.0" prefHeight="31.0" prefWidth="1145.0" text="" />
       <Button fx:id="saveBtn" disable="true" layoutX="756.0" layoutY="662.0" mnemonicParsing="false" onAction="#SaveBtnClick" prefHeight="31.0" prefWidth="184.0" text="ZAPISZ DO PLIKU" />
-      <CheckBox fx:id="graphTypeChooser" disable="true" layoutX="535.0" layoutY="698.0" mnemonicParsing="false" onMouseClicked="#GraphTypeCBStateChange" prefHeight="17.0" prefWidth="148.0" text="wyśrodkuj wizualizację" />
+      <CheckBox fx:id="graphTypeChooser" disable="true" layoutX="562.0" layoutY="698.0" mnemonicParsing="false" onMouseClicked="#GraphTypeCBStateChange" prefHeight="17.0" prefWidth="82.0" text="pełne koło" />
     </children>
 </AnchorPane>

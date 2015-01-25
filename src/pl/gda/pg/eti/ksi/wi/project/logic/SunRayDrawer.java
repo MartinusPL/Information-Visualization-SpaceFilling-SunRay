@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.gda.pg.eti.ksi.wi.project.logic;
 
 import pl.gda.pg.eti.ksi.wi.project.models.ElementCounter;
@@ -38,197 +37,207 @@ import javafx.scene.shape.ArcType;
  *
  * @author Marcin
  */
-
 public class SunRayDrawer {
+
     private GraphicsContext graphicContext;
     private TreeSet<DataRecord> data;
     private Label statusLbl;
     private javafx.scene.canvas.Canvas drawingSpace;
-    
-    private boolean isCentered;
+
+    private boolean fullCircle;
     private int lvlCounter[];
-    
+
     private ArrayList<ElementCounter> elementsSecond;
     private ArrayList<ElementCounter> elementsThird;
-    
-    private Color startColor;
-    private Color endColor;
-    private double color_r_step;
-    private double color_g_step;
-    private double color_b_step;
-    
-    
-    public SunRayDrawer(GraphicsContext g, Label l, Canvas c){
+
+    private Gradient gradient;
+    private Legend legend;
+
+    public static final int numberOfLevels = 4;
+
+    public SunRayDrawer(GraphicsContext g, Label l, Canvas c) {
         this.graphicContext = g;
         this.statusLbl = l;
         this.drawingSpace = c;
-        this.data = new TreeSet<DataRecord>() {};
+        this.data = new TreeSet<DataRecord>() {
+        };
         this.lvlCounter = new int[4];
+        this.gradient = new Gradient();
+        this.legend = new Legend();
     }
-    
-    public void AddData(DataRecord r){
+
+    public void AddData(DataRecord r) {
         this.data.add(r);
     }
-    
-    private void AnalyzeData(){
-        
+
+    private void AnalyzeData() {
+
         fillElementsSecond();
         fillElementsThird();
     }
-    
-    public void Draw(boolean isCentered){
-        if (this.data.isEmpty()){
+
+    public void Draw(boolean isCentered) {
+        if (this.data.isEmpty()) {
             statusLbl.setText("Ta metoda nie jest jeszcze zaimplementowana.");
             return;
         }
-        
+
         //clear canvas
         graphicContext.clearRect(0, 0, drawingSpace.getWidth(), drawingSpace.getHeight());
-        
-        this.isCentered = isCentered;
-        
+
+        this.fullCircle = isCentered;
+
         AnalyzeData();
-        
-        this.startColor = Color.rgb(170,255,0); // light green
-        this.endColor = Color.rgb(0,80,0); // darg green
+
+        gradient.startColor = Color.rgb(170, 255, 0); // light green
+        gradient.endColor = Color.rgb(0, 80, 0); // darg green
         DrawFourthLevel();
-        
-        this.startColor = Color.rgb(255,255,0); //yellow
-        this.endColor = Color.rgb(215,100,0); // darkorange
+
+        gradient.startColor = Color.rgb(255, 255, 0); //yellow
+        gradient.endColor = Color.rgb(215, 100, 0); // darkorange
         DrawThirdLevel();
-        
-        this.startColor = Color.rgb(255, 0, 0); // red
-        this.endColor = Color.rgb(92, 0, 0); // dark brown
+
+        gradient.startColor = Color.rgb(255, 0, 0); // red
+        gradient.endColor = Color.rgb(92, 0, 0); // dark brown
         DrawSecondLevel();
-        
-        this.startColor = Color.BLACK;
-        this.endColor = Color.BLACK;
+
+        gradient.startColor = Color.BLACK;
+        gradient.endColor = Color.BLACK;
         DrawFirstLevel();
     }
-    
+
     // Concern
-    private void DrawFirstLevel(){
+    private void DrawFirstLevel() {
         double radius = countRadius(1);
-        Color startColor = this.startColor;
+        Color startColor = gradient.startColor;
         graphicContext.setFill(startColor);
-        
-        calculateColorPartsSteps(1);
-        
+
+        gradient.calculateColorPartsSteps(1);
+
         double posx, posy, degrees;
-        if (isCentered){
-            posx = drawingSpace.getWidth() / 2 - radius;
-            posy = drawingSpace.getHeight()/ 2 - radius;
+        if (fullCircle) {
+            posx = countRadius(4) - radius;
+            posy = drawingSpace.getHeight() / 2 - radius;
             degrees = 360;
         } else {
             posx = -radius;
             posy = drawingSpace.getHeight() - radius;
             degrees = 90;
         }
-        
-        graphicContext.fillArc(posx, posy, 2*radius, 2*radius, 0, degrees, ArcType.ROUND);
+
+        graphicContext.fillArc(posx, posy, 2 * radius, 2 * radius, 0, degrees, ArcType.ROUND);
     }
-    
+
     // Type
-    private void DrawSecondLevel(){
+    private void DrawSecondLevel() {
         int lvl = 2;
         double radius = countRadius(lvl);
-        
+
         int sum = fillElementsSecond();
-        calculateColorPartsSteps(elementsSecond.size());
-        
-        
-        
+        gradient.calculateColorPartsSteps(elementsSecond.size());
+        legend.Reset();
+
         // drawing elements
         double last_degrees = 0;
-        for (ElementCounter ec : elementsSecond){
-            double degrees = (float)ec.quantity / (float)sum * 90.00;
-            
+        for (ElementCounter ec : elementsSecond) {
+            double degrees = (float) ec.quantity / (float) sum * 90.00;
+
             double posx, posy;
-            if (isCentered){
-                posx = drawingSpace.getWidth() / 2 - radius;
-                posy = drawingSpace.getHeight()/ 2 - radius;
+            if (fullCircle) {
+                posx = countRadius(4) - radius;
+                posy = drawingSpace.getHeight() / 2 - radius;
                 degrees = degrees * 4;
             } else {
                 posx = -radius;
                 posy = drawingSpace.getHeight() - radius;
             }
-            
-            startColor = generateNextColor(startColor);
-            graphicContext.setFill(startColor);
-            //-prev_radius, drawingSpace.getHeight() - radius + prev_radius
-            graphicContext.fillArc(posx, posy, 2*radius, 2*radius, last_degrees, degrees, ArcType.ROUND);
+
+            gradient.startColor = gradient.generateNextColor(gradient.startColor);
+            graphicContext.setFill(gradient.startColor);
+            graphicContext.fillArc(posx, posy, 2 * radius, 2 * radius, last_degrees, degrees, ArcType.ROUND);
+            legend.Add(ec.name, gradient.startColor, lvl);
             last_degrees += degrees;
         }
+
+        legend.Draw(drawingSpace, lvl);
     }
 
     // Mark
-    private void DrawThirdLevel(){
+    private void DrawThirdLevel() {
         int lvl = 3;
         double radius = countRadius(lvl);
-        
+
         int sum = fillElementsThird();
-        
-        calculateColorPartsSteps(elementsThird.size());
-        
+
+        gradient.calculateColorPartsSteps(elementsThird.size());
+        legend.Reset();
+
         // drawing elements
         double last_degrees = 0;
-        for (ElementCounter ec : elementsThird){            
-            double degrees = (float)ec.quantity / (float) sum * 90.00;
-            
+        for (ElementCounter ec : elementsThird) {
+            double degrees = (float) ec.quantity / (float) sum * 90.00;
+
             double posx, posy;
-            if (isCentered){
-                posx = drawingSpace.getWidth() / 2 - radius;
-                posy = drawingSpace.getHeight()/ 2 - radius;
+            if (fullCircle) {
+                posx = countRadius(4) - radius;
+                posy = drawingSpace.getHeight() / 2 - radius;
                 degrees = degrees * 4;
             } else {
                 posx = -radius;
                 posy = drawingSpace.getHeight() - radius;
             }
-            
-            startColor = generateNextColor(startColor);
-            graphicContext.setFill(startColor);
-            graphicContext.fillArc(posx, posy, 2*radius, 2*radius, last_degrees, degrees, ArcType.ROUND);
+
+            gradient.startColor = gradient.generateNextColor(gradient.startColor);
+            graphicContext.setFill(gradient.startColor);
+            graphicContext.fillArc(posx, posy, 2 * radius, 2 * radius, last_degrees, degrees, ArcType.ROUND);
+
+            legend.Add(ec.name, gradient.startColor, lvl);
+
             last_degrees += degrees;
         }
+
+        legend.Draw(drawingSpace, lvl);
     }
-    
+
     // Model
-    private void DrawFourthLevel(){
+    private void DrawFourthLevel() {
         int lvl = 4;
         double radius = countRadius(lvl);
-       
+
         int sum = fillElementsThird(); // only get sum, list of elements is not important here
 
-        calculateColorPartsSteps(this.data.size());
-        
-        
-        
+        gradient.calculateColorPartsSteps(this.data.size());
+        legend.Reset();
+
         // drawing elements
         double last_degrees = 0;
-        for (DataRecord ec : this.data){            
-            double degrees = (float)ec.getQuantity() / (float) sum * 90.00;
-            
+        for (DataRecord ec : this.data) {
+            double degrees = (float) ec.getQuantity() / (float) sum * 90.00;
+
             double posx, posy;
-            if (isCentered){
-                posx = drawingSpace.getWidth() / 2 - radius;
-                posy = drawingSpace.getHeight()/ 2 - radius;
+            if (fullCircle) {
+                posx = 0;
+                posy = drawingSpace.getHeight() / 2 - radius;
                 degrees = degrees * 4;
             } else {
                 posx = -radius;
                 posy = drawingSpace.getHeight() - radius;
             }
-            
-            startColor = generateNextColor(startColor);
-            graphicContext.setFill(startColor);
-            graphicContext.fillArc(posx, posy, 2*radius, 2*radius, last_degrees, degrees, ArcType.ROUND);
+
+            gradient.startColor = gradient.generateNextColor(gradient.startColor);
+            graphicContext.setFill(gradient.startColor);
+            graphicContext.fillArc(posx, posy, 2 * radius, 2 * radius, last_degrees, degrees, ArcType.ROUND);
+            legend.Add(ec.getMark() + " " + ec.getModel(), gradient.startColor, 4);
             last_degrees += degrees;
         }
-    }   
-    
-    private double countRadius(int level){
+
+        legend.Draw(drawingSpace, lvl);
+    }
+
+    private double countRadius(int level) {
         double multiplier;
-        if (!isCentered){
-            switch(level){
+        if (!fullCircle) {
+            switch (level) {
                 case 1:
                     multiplier = 0.25;
                     break;
@@ -245,7 +254,7 @@ public class SunRayDrawer {
                     multiplier = 1.00;
             }
         } else {
-            switch(level){
+            switch (level) {
                 case 1:
                     multiplier = 0.12;
                     break;
@@ -262,22 +271,22 @@ public class SunRayDrawer {
                     multiplier = 0.48;
             }
         }
-        double radius_float =  multiplier * (drawingSpace.getHeight() < drawingSpace.getWidth() ? drawingSpace.getHeight() : drawingSpace.getWidth());
+        double radius_float = multiplier * (drawingSpace.getHeight() < drawingSpace.getWidth() ? drawingSpace.getHeight() : drawingSpace.getWidth());
         System.out.println("Poziom " + level + " - promieñ wyliczony: " + radius_float);
-        
+
         return radius_float;
     }
-    
-    private int fillElementsSecond(){
+
+    private int fillElementsSecond() {
         ArrayList<ElementCounter> elements = new ArrayList<>();
-        
+
         // counting aggregated values of elements at this level
         String last = this.data.first().getType();
         int counter = 0;
         int sum = 0;
-        for (DataRecord dr : this.data){
+        for (DataRecord dr : this.data) {
             String current = dr.getType();
-            if (!current.equals(last)){
+            if (!current.equals(last)) {
                 elements.add(new ElementCounter(last, counter));
                 counter = dr.getQuantity();
                 sum += dr.getQuantity();
@@ -288,24 +297,24 @@ public class SunRayDrawer {
             }
         }
         elements.add(new ElementCounter(last, counter));
-        
+
         elementsSecond = elements;
-        
+
         return sum;
     }
-    
-    private int fillElementsThird(){
+
+    private int fillElementsThird() {
         ArrayList<ElementCounter> elements = new ArrayList<>();
-        
+
         // counting aggregated values of elements at this level
         String lastType = this.data.first().getType();
         String lastMark = this.data.first().getMark();
         int counter = 0;
         int sum = 0;
-        for (DataRecord dr : this.data){
+        for (DataRecord dr : this.data) {
             String currentType = dr.getType();
             String currentMark = dr.getMark();
-            if (!currentMark.equals(lastMark) || !currentType.equals(lastType)){
+            if (!currentMark.equals(lastMark) || !currentType.equals(lastType)) {
                 elements.add(new ElementCounter(lastMark, lastType, counter));
                 counter = dr.getQuantity();
                 sum += dr.getQuantity();
@@ -317,60 +326,10 @@ public class SunRayDrawer {
             }
         }
         elements.add(new ElementCounter(lastMark, lastType, counter));
-        
+
         elementsThird = elements;
-        
+
         return sum;
     }
-    
-    private Color generateNextColor(Color start){
-        
-        double r, g, b, bright, sat, opacity;
-        r = start.getRed();
-        g = start.getGreen();
-        b = start.getBlue();
-        bright = start.getBrightness();
-        sat = start.getSaturation();
-        opacity = start.getOpacity();
-        
-       
-        r = applyColorPartStep(r, this.color_r_step);
-        g = applyColorPartStep(g, this.color_g_step);
-        b = applyColorPartStep(b, this.color_b_step);
-        
-        Color ret = new Color(r, g, b, start.getOpacity());
-        
-        return ret;
-        
-    }
-    
-    private double applyColorPartStep(double part, double step){
-        
-        if (part + step < 0.00){
-            return part;
-        }else if (part + step > 1.00){
-            return part;
-        } else {
-            return part + step;
-        }
-        
-    }
-    
-    private void calculateColorPartsSteps(int numberOfSteps){
-        
-        double start_r, start_g, start_b;
-        start_r = this.startColor.getRed();
-        start_g = this.startColor.getGreen();
-        start_b = this.startColor.getBlue();
-        
-        double end_r, end_g, end_b;
-        end_r = this.endColor.getRed();
-        end_g = this.endColor.getGreen();
-        end_b = this.endColor.getBlue();
-        
-        double numberOfStepsFloat = (double) numberOfSteps;
-        this.color_r_step = (end_r - start_r)/numberOfStepsFloat;
-        this.color_g_step = (end_g - start_g)/numberOfStepsFloat;
-        this.color_b_step = (end_b - start_b)/numberOfStepsFloat;
-    }
+
 }
