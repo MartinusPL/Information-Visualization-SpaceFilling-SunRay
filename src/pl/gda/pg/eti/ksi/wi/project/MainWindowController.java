@@ -35,16 +35,19 @@ import java.util.ResourceBundle;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 /**
  *
@@ -87,8 +90,22 @@ public class MainWindowController implements Initializable {
     }
     
     @FXML
-    private void EditBtnClick(ActionEvent event) {
-        statusLbl.setText("Ta metoda nie jest jeszcze zaimplementowana.");
+    private void EditBtnClick(ActionEvent event) throws Exception{
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("EditWindow.fxml"));
+        //Parent root = loader.getRoot();
+        
+        Stage stage = new Stage();
+        Scene scene = new Scene(loader.load());
+        
+        EditWindowController controller = loader.getController();
+        controller.setData(srd.getData());
+        controller.setStage(stage);
+        controller.setGenerateBtn(generateBtn);
+        
+        stage.setScene(scene);
+        stage.setTitle("Edycja danych");
+        stage.show();
     }
     
     @FXML

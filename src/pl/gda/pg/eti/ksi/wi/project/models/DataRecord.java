@@ -25,73 +25,97 @@
 package pl.gda.pg.eti.ksi.wi.project.models;
 
 import java.util.Objects;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
  * @author Marcin
  */
 public class DataRecord implements Comparable{
-    private String Concern;
-    private String Type;
-    private String Mark;
-    private String Model;
-    private int Quantity;
+    private StringProperty Concern;
+    private StringProperty Type;
+    private StringProperty Mark;
+    private StringProperty Model;
+    private IntegerProperty Quantity;
 
     public DataRecord(String Concern, String Type, String Mark, String Model, int Quantity) {
-        this.Concern = Concern;
-        this.Type = Type;
-        this.Mark = Mark;
-        this.Model = Model;
-        this.Quantity = Quantity;
+        this.Concern = new SimpleStringProperty(Concern);
+        this.Type = new SimpleStringProperty(Type);
+        this.Mark = new SimpleStringProperty(Mark);
+        this.Model = new SimpleStringProperty(Model);
+        this.Quantity = new SimpleIntegerProperty(Quantity);
     }
     
     public String getConcern() {
-        return Concern;
+        return Concern.get();
     }
-
+    
     public void setConcern(String Concern) {
-        this.Concern = Concern;
+        this.Concern.set(Concern);
     }
-
+    
     public String getType() {
-        return Type;
+        return Type.get();
     }
-
+    
     public void setType(String Type) {
-        this.Type = Type;
+        this.Type.set(Type);
     }
 
     public String getMark() {
-        return Mark;
+        return Mark.get();
     }
 
     public void setMark(String Mark) {
-        this.Mark = Mark;
+        this.Mark.set(Mark);
     }
 
     public String getModel() {
-        return Model;
+        return Model.get();
     }
 
     public void setModel(String Model) {
-        this.Model = Model;
+        this.Model.set(Model);
     }
 
     public int getQuantity() {
-        return Quantity;
+        return Quantity.get();
     }
 
     public void setQuantity(int Quantity) {
-        this.Quantity = Quantity;
+        this.Quantity.set(Quantity);
+    }
+    
+    public StringProperty getConcernProperty(){
+        return Concern;
+    }
+    
+    public StringProperty getMarkProperty(){
+        return Mark;
+    }
+    
+    public StringProperty getModelProperty(){
+        return Model;
+    }
+    
+    public StringProperty getTypeProperty(){
+        return Type;
+    }
+    
+    public IntegerProperty getQuantityProperty(){
+        return Quantity;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 19 * hash + Objects.hashCode(this.Concern);
-        hash = 19 * hash + Objects.hashCode(this.Type);
-        hash = 19 * hash + Objects.hashCode(this.Mark);
-        hash = 19 * hash + Objects.hashCode(this.Model);
+        hash = 19 * hash + Objects.hashCode(this.Concern.get());
+        hash = 19 * hash + Objects.hashCode(this.Type.get());
+        hash = 19 * hash + Objects.hashCode(this.Mark.get());
+        hash = 19 * hash + Objects.hashCode(this.Model.get());
         //hash = 19 * hash + this.Quantity;
         return hash;
     }
@@ -105,16 +129,16 @@ public class DataRecord implements Comparable{
             return false;
         }
         final DataRecord other = (DataRecord) obj;
-        if (!Objects.equals(this.Concern, other.Concern)) {
+        if (!Objects.equals(this.Concern.get(), other.Concern.get())) {
             return false;
         }
-        if (!Objects.equals(this.Type, other.Type)) {
+        if (!Objects.equals(this.Type.get(), other.Type.get())) {
             return false;
         }
-        if (!Objects.equals(this.Mark, other.Mark)) {
+        if (!Objects.equals(this.Mark.get(), other.Mark.get())) {
             return false;
         }
-        if (!Objects.equals(this.Model, other.Model)) {
+        if (!Objects.equals(this.Model.get(), other.Model.get())) {
             return false;
         }
         return true;
@@ -124,19 +148,19 @@ public class DataRecord implements Comparable{
     public int compareTo(Object t) {
         DataRecord tmp = (DataRecord) t;        
         
-        if (!tmp.getConcern().equals(Concern)){
-            return Concern.compareTo(tmp.getConcern());
-        }else if (!tmp.getType().equals(Type)){
-            return Type.compareTo(tmp.getType());
-        }else if (!tmp.getMark().equals(Mark)){
-            return Mark.compareTo(tmp.getMark());
-        }else if (!tmp.getModel().equals(Model)){
-            return Model.compareTo(tmp.getModel());
+        if (!tmp.getConcern().equals(Concern.get())){
+            return Concern.get().compareTo(tmp.getConcern());
+        }else if (!tmp.getType().equals(Type.get())){
+            return Type.get().compareTo(tmp.getType());
+        }else if (!tmp.getMark().equals(Mark.get())){
+            return Mark.get().compareTo(tmp.getMark());
+        }else if (!tmp.getModel().equals(Model.get())){
+            return Model.get().compareTo(tmp.getModel());
         }else 
-            return Quantity - (tmp.getQuantity());
+            return Quantity.get() - (tmp.getQuantity());
         
-    }
- 
+    } 
+    
     
     
 }

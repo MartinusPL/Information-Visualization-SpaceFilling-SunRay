@@ -332,4 +332,9 @@ public class SunRayDrawer {
         return sum;
     }
 
+    public TreeSet<DataRecord> getData() {
+        return data;
+    }
+    
+    
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="461.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.gda.pg.eti.ksi.wi.project.EditWindowController">
+   <children>
+      <TableView fx:id="dataTable" editable="true" layoutX="14.0" layoutY="14.0" prefHeight="370.0" prefWidth="571.0">
+        <columns>
+          <TableColumn fx:id="firstLevelColumn" prefWidth="125.0" text="Koncern" />
+          <TableColumn fx:id="secondLevelColumn" prefWidth="125.0" text="Typ" />
+            <TableColumn fx:id="thirsLevelColumn" minWidth="0.0" prefWidth="133.0" text="Marka" />
+            <TableColumn fx:id="fourthLevelColumn" minWidth="3.0" prefWidth="104.0" text="Model" />
+            <TableColumn fx:id="quantityColumn" prefWidth="81.0" text="Ilość" />
+        </columns>
+      </TableView>
+      <Button layoutX="14.0" layoutY="392.0" mnemonicParsing="false" onAction="#AddBtnClick" prefHeight="39.0" prefWidth="60.0" text="+" />
+      <Button layoutX="302.0" layoutY="392.0" mnemonicParsing="false" onAction="#exportBtnClick" prefHeight="39.0" prefWidth="140.0" text="EXPORTUJ DANE" />
+      <Button layoutX="446.0" layoutY="392.0" mnemonicParsing="false" onAction="#closeBtnClick" prefHeight="39.0" prefWidth="140.0" text="ZAMKNIJ OKNO" />
+      <Button layoutX="158.0" layoutY="392.0" mnemonicParsing="false" onAction="#saveBtnBlick" prefHeight="39.0" prefWidth="140.0" text="ZAPISZ DANE" />
+      <Button layoutX="79.0" layoutY="392.0" mnemonicParsing="false" onAction="#RemoveBtnClick" prefHeight="39.0" prefWidth="60.0" text="-" />
+      <Label fx:id="statusLbl" layoutX="14.0" layoutY="439.0" prefHeight="17.0" prefWidth="571.0" />
+   </children>
+</AnchorPane>
